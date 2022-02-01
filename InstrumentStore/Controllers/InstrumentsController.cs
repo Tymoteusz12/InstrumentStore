@@ -1,23 +1,16 @@
-﻿using Bookstore.Data;
-using Bookstore.Data.Services;
-using Bookstore.Data.Static;
-using Bookstore.Models;
+﻿using InstrumentStore.Models.Static;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Bookstore.Controllers
 {
     [Authorize(Roles = UserRoles.Admin)]
-    public class AuthorsController : Controller
+    public class InstrumentsController : Controller
     {
         private readonly IAuthorsService _service;
 
-        public AuthorsController(IAuthorsService service)
+        public InstrumentsController(IAuthorsService service)
         {
             _service = service;
         }
@@ -45,7 +38,7 @@ namespace Bookstore.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("ProfilePictureURL,FullName,Bio")]Author author)
+        public async Task<IActionResult> Create([Bind("ProfilePictureURL,FullName,Bio")] Author author)
         {
             if (!ModelState.IsValid) return View(author);
 
@@ -66,7 +59,7 @@ namespace Bookstore.Controllers
         {
             if (!ModelState.IsValid) return View(author);
 
-            if(id == author.Id)
+            if (id == author.Id)
             {
                 await _service.UpdateAsync(id, author);
                 return RedirectToAction(nameof(Index));

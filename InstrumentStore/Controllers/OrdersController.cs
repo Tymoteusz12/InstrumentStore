@@ -13,11 +13,11 @@ using System.Threading.Tasks;
 namespace Bookstore.Controllers
 {
     [Authorize(Roles = UserRoles.Admin)]
-    public class PublishingHousesController : Controller
+    public class OrdersController : Controller
     {
         private readonly IPublishingHousesService _service;
 
-        public PublishingHousesController(IPublishingHousesService service)
+        public OrdersController(IPublishingHousesService service)
         {
             _service = service;
         }
