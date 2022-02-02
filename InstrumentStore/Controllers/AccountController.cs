@@ -11,7 +11,7 @@ namespace Bookstore.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UserManager<DataAccessLayer.Models.ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IUnitOfWork _context;
 
@@ -36,6 +36,7 @@ namespace Bookstore.Controllers
             if (!ModelState.IsValid) return View(credentials);
 
             var user = await _userManager.FindByEmailAsync(credentials.EmailAddress);
+
             if (user != null)
             {
                 var passwordCheck = await _userManager.CheckPasswordAsync(user, credentials.Password);

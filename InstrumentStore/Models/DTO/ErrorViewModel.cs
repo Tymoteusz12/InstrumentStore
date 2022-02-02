@@ -1,6 +1,6 @@
 using System;
 
-namespace InstrumentStore.Models
+namespace InstrumentStore.Models.DTO
 {
     public class ErrorViewModel
     {

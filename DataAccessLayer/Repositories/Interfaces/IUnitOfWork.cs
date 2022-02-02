@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using DataAccessLayer.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DataAccessLayer.Repositories.Interfaces
 {
@@ -9,5 +11,6 @@ namespace DataAccessLayer.Repositories.Interfaces
         IOrderRepository Orders { get; }
 
         Task Save();
+        IEnumerable<ApplicationUser> GetAllUsers();
     }
 }

@@ -1,4 +1,5 @@
-﻿@model IEnumerable<ApplicationUser>
+﻿@using InstrumentStore.Models.DTO
+@model IEnumerable<UserDTO>
 
 @{
     ViewData["Title"] = "List of all users";
@@ -21,17 +22,23 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                <tr>
-                    <td class="align-middle">
-                        @Html.DisplayFor(modelItem => item.FullName)
-                    </td>
-                    <td class="align-middle">
-                        @Html.DisplayFor(modelItem => item.UserName)
-                    </td>
-                    <td class="align-middle">
-                        @Html.DisplayFor(modelItem => item.Email)
-                    </td>
-                </tr>
+                    <tr>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.FullName)
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.UserName)
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                    </tr>
+                    @foreach (var order in item.Orders)
+                    {
+                        <div>
+                            
+                        </div>
+                    }
                 }
             </tbody>
 

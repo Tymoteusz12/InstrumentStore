@@ -10,6 +10,7 @@ namespace DataAccessLayer.Repositories.Interfaces
         Task<TEntity> GetById(Guid id);
         Task<IEnumerable<TEntity>> GetAll();
         Task Add(TEntity entity);
+        void Edit(TEntity entity);
         void Remove(TEntity entity);
     }
 }

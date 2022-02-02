@@ -1,0 +1,19 @@
+﻿using DataAccessLayer.Models;
+using InstrumentStore.Models.DTO;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace InstrumentStore.Services.Interfaces
+{
+    public interface IInstrumentsService
+    {
+        Task<IEnumerable<InstrumentDTO>> GetAllInstrumentsAsync();
+
+        Task<InstrumentDTO> InsertInstrumentAsync(InstrumentDTO model);
+
+        Task EditInstrumentAsync(InstrumentDTO model);
+
+        Task RemoveInstrumentAsync(Guid id);
+    }
+}

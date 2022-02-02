@@ -42,5 +42,10 @@ namespace DataAccessLayer.Repositories.Implementation
         {
             Context.Set<TEntity>().Remove(entity);
         }
+
+        public void Edit(TEntity entity)
+        {
+            Context.Set<TEntity>().Update(entity);
+        }
     }
 }

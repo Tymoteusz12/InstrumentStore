@@ -18,7 +18,7 @@ namespace DataAccessLayer.Repositories.Implementation
         }
 
         private readonly ApplicationDbContext _context;
-        public IBrandRepository Brands { get; private set; });
+        public IBrandRepository Brands { get; private set; }
 
         public IInstrumentsRepository Instruments { get; private set; }
 
@@ -29,9 +29,6 @@ namespace DataAccessLayer.Repositories.Implementation
             await _context.SaveChangesAsync();
         }
 
-        public IEnumerable<ApplicationUser> GetAllUsers()
-        {
-            return _context.Users;
-        }
+        public IEnumerable<ApplicationUser> GetAllUsers() => _context.Users;
     }
 }

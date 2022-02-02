@@ -8,9 +8,9 @@ namespace Bookstore.Controllers
     [Authorize(Roles = UserRoles.Admin)]
     public class InstrumentsController : Controller
     {
-        private readonly IAuthorsService _service;
+        private readonly IInstrumentsService _service;
 
-        public InstrumentsController(IAuthorsService service)
+        public InstrumentsController(IInstrumentsService service)
         {
             _service = service;
         }
@@ -18,7 +18,7 @@ namespace Bookstore.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            var allAuthors = await _service.GetAllAsync();
+            var instruments = await _service.GetAllAsync();
             return View(allAuthors);
         }
 

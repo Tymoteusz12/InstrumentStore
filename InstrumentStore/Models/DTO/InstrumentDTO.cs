@@ -1,9 +1,11 @@
 ﻿using DataAccessLayer.Enum;
+using System;
 
-namespace InstrumentStore.Models
+namespace InstrumentStore.Models.DTO
 {
-    public class Instrument
+    public class InstrumentDTO
     {
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public float Price { get; set; }
         public string ImageURL { get; set; }

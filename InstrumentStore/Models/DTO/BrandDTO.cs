@@ -1,6 +1,6 @@
-﻿namespace InstrumentStore.Models
+﻿namespace InstrumentStore.Models.DTO
 {
-    public class Brand
+    public class BrandDTO
     {
         public string BrandName { get; set; }
         public string BrandDetails { get; set; }

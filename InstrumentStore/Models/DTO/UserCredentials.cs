@@ -1,6 +1,8 @@
-﻿namespace InstrumentStore.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace InstrumentStore.Models.DTO
 {
-    public class Credentials
+    public class UserCredentials
     {
         [Display(Name = "Email address")]
         [Required(ErrorMessage = "Email address is required")]
