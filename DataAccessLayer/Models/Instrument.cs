@@ -11,7 +11,7 @@ namespace DataAccessLayer.Models
         public string ImageURL { get; set; }
         public string Description { get; set; }
         public InstrumentTypeEnum InstrumentTypeValue { get; set; }
-        public Guid BrandId { get; set; }
+        public int BrandId { get; set; }
         [ForeignKey("BrandId")]
         public Brand Brand { get; set; }
     }

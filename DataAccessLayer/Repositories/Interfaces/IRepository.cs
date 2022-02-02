@@ -7,7 +7,7 @@ namespace DataAccessLayer.Repositories.Interfaces
 {
     public interface IRepository<TEntity> where TEntity : EntityObject, new()
     {
-        Task<TEntity> GetById(Guid id);
+        Task<TEntity> GetById(int id);
         Task<IEnumerable<TEntity>> GetAll();
         Task Add(TEntity entity);
         void Edit(TEntity entity);

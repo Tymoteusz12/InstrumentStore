@@ -28,7 +28,7 @@ namespace InstrumentsStore.Providers
             return _mapper.Map<IEnumerable<BrandDTO>>(brands);
         }
 
-        public async Task<BrandDTO> GetById(Guid id)
+        public async Task<BrandDTO> GetById(int id)
         {
             var brand = await _db.Brands.GetById(id);
             return _mapper.Map<BrandDTO>(brand);
@@ -49,7 +49,7 @@ namespace InstrumentsStore.Providers
             await _db.Save();
         }
 
-        public async Task Delete(Guid id)
+        public async Task Delete(int id)
         {
             var brand = await _db.Brands.GetById(id);
             _db.Brands.Remove(brand);

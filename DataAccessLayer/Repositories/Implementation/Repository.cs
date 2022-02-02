@@ -2,7 +2,6 @@
 using DataAccessLayer.Models;
 using DataAccessLayer.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,7 +25,7 @@ namespace DataAccessLayer.Repositories.Implementation
                 .ToListAsync();
         }
 
-        public virtual async Task<TEntity> GetById(Guid id)
+        public virtual async Task<TEntity> GetById(int id)
         {
             return await Context.Set<TEntity>().
                 Where(x => x.Id == id)

@@ -9,10 +9,11 @@ namespace InstrumentStore.Services.Interfaces
     {
         Task<IEnumerable<BrandDTO>> GetAllBrandsAsync();
 
+        Task<BrandDTO> GetBrandByIdAsync(int id);
         Task<BrandDTO> InsertBrandAsync(BrandDTO model);
 
         Task EditBrandAsync(BrandDTO model);
 
-        Task RemoveBrandAsync(Guid id);
+        Task RemoveBrandAsync(int id);
     }
 }

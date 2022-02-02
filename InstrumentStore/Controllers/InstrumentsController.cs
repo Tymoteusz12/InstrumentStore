@@ -1,88 +1,103 @@
-﻿using InstrumentStore.Models.Static;
+﻿using InstrumentStore.Models.DTO;
+using InstrumentStore.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
-namespace Bookstore.Controllers
+namespace InstrumentsStore.Controllers
 {
-    [Authorize(Roles = UserRoles.Admin)]
-    public class InstrumentsController : Controller
+    public class InstrumentController : Controller
     {
-        private readonly IInstrumentsService _service;
+        private readonly IInstrumentsService _instrumentService;
 
-        public InstrumentsController(IInstrumentsService service)
+        public InstrumentController(IInstrumentsService instrumentService)
         {
-            _service = service;
+            _instrumentService = instrumentService ?? throw new ArgumentNullException(nameof(instrumentService));
         }
 
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            var instruments = await _service.GetAllAsync();
-            return View(allAuthors);
+            var instruments = await _instrumentService.GetAllInstrumentsAsync();
+            return View(instruments);
         }
 
-        //GET: authors/details/1
         [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         {
-            var authorDetails = await _service.GetByIdAsync(id);
-            if (authorDetails == null) return View("NotFound");
-            return View(authorDetails);
+            var instrumentDetails = await _instrumentService.GetByIdAsync(id);
+            if (instrumentDetails == null) return View("NotFound");
+            return View(instrumentDetails);
         }
 
-        //GET: authors/create
+        [AllowAnonymous]
+        public async Task<IActionResult> Search(string searchString)
+        {
+            var allInstruments = await _instrumentService.GetAllInstrumentsAsync();
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                var filteredResult = allInstruments
+                    .Where(instrument => instrument.Name.Contains(searchString, StringComparison.CurrentCultureIgnoreCase))
+                    .ToList();
+
+                return View("Index", filteredResult);
+            }
+
+            return View("Index", allInstruments);
+        }
+
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("ProfilePictureURL,FullName,Bio")] Author author)
+        public async Task<IActionResult> Create([Bind("Name, Price, ImageURL, Description, InstrumentTypeValue, BrandId")] InstrumentDTO instrument)
         {
-            if (!ModelState.IsValid) return View(author);
+            if (!ModelState.IsValid) return View(instrument);
 
-            await _service.AddAsync(author);
+            await _instrumentService.InsertInstrumentAsync(instrument);
             return RedirectToAction(nameof(Index));
         }
 
-        //GET: authors/edit/1
         public async Task<IActionResult> Edit(int id)
         {
-            var authorDetails = await _service.GetByIdAsync(id);
+            var authorDetails = await _instrumentService.GetByIdAsync(id);
             if (authorDetails == null) return View("NotFound");
             return View(authorDetails);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ProfilePictureURL,FullName,Bio")] Author author)
+        public async Task<IActionResult> Edit(int id, [Bind("Name, Price, ImageURL, Description, InstrumentTypeValue, BrandId")] InstrumentDTO instrument)
         {
-            if (!ModelState.IsValid) return View(author);
+            if (!ModelState.IsValid) return View(instrument);
 
-            if (id == author.Id)
-            {
-                await _service.UpdateAsync(id, author);
-                return RedirectToAction(nameof(Index));
-            }
-            return View(author);
+            await _instrumentService.EditInstrumentAsync(instrument);
+            return RedirectToAction(nameof(Index));
         }
 
-        //GET: authors/delete/1
         public async Task<IActionResult> Delete(int id)
         {
-            var authorDetails = await _service.GetByIdAsync(id);
+            var authorDetails = await _instrumentService.GetByIdAsync(id);
             if (authorDetails == null) return View("NotFound");
             return View(authorDetails);
         }
 
-        [HttpPost, ActionName("Delete")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [HttpPost]
+        public async Task<IActionResult> DeleteInstrument(int id)
         {
-            var authorDetails = await _service.GetByIdAsync(id);
-            if (authorDetails == null) return View("NotFound");
-
-            await _service.DeleteAsync(id);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await _instrumentService.RemoveInstrumentAsync(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch(Exception _)
+            {
+                return View("NotFound");
+            }
         }
     }
 }

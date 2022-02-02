@@ -10,10 +10,11 @@ namespace InstrumentStore.Services.Interfaces
     {
         Task<IEnumerable<InstrumentDTO>> GetAllInstrumentsAsync();
 
+        Task<InstrumentDTO> GetByIdAsync(int id);
         Task<InstrumentDTO> InsertInstrumentAsync(InstrumentDTO model);
 
         Task EditInstrumentAsync(InstrumentDTO model);
 
-        Task RemoveInstrumentAsync(Guid id);
+        Task RemoveInstrumentAsync(int id);
     }
 }

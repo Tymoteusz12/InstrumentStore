@@ -24,13 +24,26 @@ namespace InstrumentStore.Services
             return await _brandsProvider.GetAll();
         }
 
+        public async Task<BrandDTO> GetBrandByIdAsync(int id)
+        {
+            var brand = await _brandsProvider.GetById(id);
+
+            if (brand == null)
+            {
+                throw new ArgumentNullException("Invalid brand id");
+            }
+
+            return brand;
+        }
+
         public async Task<BrandDTO> InsertBrandAsync(BrandDTO model)
         {
             return await _brandsProvider.Insert(model);
         }
 
-        public async Task RemoveBrandAsync(Guid id)
+        public async Task RemoveBrandAsync(int id)
         {
+            await GetBrandById(id);
             await _brandsProvider.Delete(id);
         }
     }

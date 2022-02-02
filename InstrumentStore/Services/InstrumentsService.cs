@@ -15,7 +15,17 @@ namespace InstrumentStore.Services
         {
             return await _instrumentsProvider.GetAll();
         }
+        public async Task<InstrumentDTO> GetByIdAsync(int id)
+        {
+            var instrument = await _instrumentsProvider.GetById(id);
 
+            if (instrument == null)
+            {
+                throw new ArgumentNullException("Invalid id.");
+            }
+
+            return instrument;
+        }
         public async Task<InstrumentDTO> InsertInstrumentAsync(InstrumentDTO model)
         {
             return await _instrumentsProvider.Insert(model);
@@ -26,9 +36,12 @@ namespace InstrumentStore.Services
             await _instrumentsProvider.Replace(model);
         }
 
-        public async Task RemoveInstrumentAsync(Guid id)
+        public async Task RemoveInstrumentAsync(int id)
         {
+            await _instrumentsProvider.GetById(id);
             await _instrumentsProvider.Delete(id);
         }
+
+        
     }
 }

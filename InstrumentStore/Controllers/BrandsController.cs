@@ -1,130 +1,91 @@
-﻿using Bookstore.Data;
-using Bookstore.Data.Services;
-using Bookstore.Data.Static;
-using Bookstore.Models;
+﻿using InstrumentStore.Models.DTO;
+using InstrumentStore.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
-namespace Bookstore.Controllers
+namespace InstrumentsStore.Controllers
 {
-    [Authorize(Roles = UserRoles.Admin)]
     public class BrandsController : Controller
     {
-        private readonly IBooksService _service;
+        private readonly IBrandsService _brandService;
 
-        public BrandsController(IBooksService service)
+        public BrandsController(IBrandsService brandService)
         {
-            _service = service;
+            _brandService = brandService ?? throw new ArgumentNullException();
         }
 
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            var allBooks = await _service.GetAllAsync(n => n.PublishingHouse);
-            return View(allBooks);
+            var brands = await _brandService.GetAllBrandsAsync();
+            return View(brands);
         }
 
-        [AllowAnonymous]
-        public async Task<IActionResult> Filter(string searchString)
-        {
-            var allBooks = await _service.GetAllAsync(n => n.PublishingHouse);
-
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                var filteredResultNew = allBooks.Where(n => string.Equals(n.Name, searchString, StringComparison.CurrentCultureIgnoreCase) || string.Equals(n.Description, searchString, StringComparison.CurrentCultureIgnoreCase)).ToList();
-
-                return View("Index", filteredResultNew);
-            }
-
-            return View("Index", allBooks);
-        }
-
-        //GET: Books/Details/1
         [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         {
-            var bookDetail = await _service.GetBookByIdAsync(id);
-            return View(bookDetail);
+            var brandDetails = await _brandService.GetBrandByIdAsync(id);
+            if (brandDetails == null) return View("NotFound");
+            return View(brandDetails);
         }
 
-        //GET: Books/Create
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
-            var bookDropdownsData = await _service.GetNewBookDropdownsValues();
-
-            ViewBag.PublishingHouses = new SelectList(bookDropdownsData.PublishingHouses, "Id", "Name");
-            ViewBag.Authors = new SelectList(bookDropdownsData.Authors, "Id", "FullName");
-
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(NewBookVM book)
+        public async Task<IActionResult> Create([Bind("BrandName, BrandDetails, Comment, LogoURL")] BrandDTO brand)
         {
-            if (!ModelState.IsValid)
-            {
-                var bookDropdownsData = await _service.GetNewBookDropdownsValues();
+            if (!ModelState.IsValid) return View(brand);
 
-                ViewBag.PublishingHouses = new SelectList(bookDropdownsData.PublishingHouses, "Id", "Name");
-                ViewBag.Authors = new SelectList(bookDropdownsData.Authors, "Id", "FullName");
-
-                return View(book);
-            }
-
-            await _service.AddNewBookAsync(book);
+            await _brandService.InsertBrandAsync(brand);
             return RedirectToAction(nameof(Index));
         }
 
-
-        //GET: Books/Edit/1
         public async Task<IActionResult> Edit(int id)
         {
-            var bookDetails = await _service.GetBookByIdAsync(id);
-            if (bookDetails == null) return View("NotFound");
-
-            var response = new NewBookVM()
-            {
-                Id = bookDetails.Id,
-                Name = bookDetails.Name,
-                Description = bookDetails.Description,
-                Price = bookDetails.Price,
-                ReleaseDate = bookDetails.ReleaseDate,
-                ImageURL = bookDetails.ImageURL,
-                BookCategory = bookDetails.BookCategory,
-                PublishingHouseId = bookDetails.PublishingHouseId,
-                AuthorId = bookDetails.AuthorId,
-            };
-
-            var bookDropdownsData = await _service.GetNewBookDropdownsValues();
-            ViewBag.PublishingHouses = new SelectList(bookDropdownsData.PublishingHouses, "Id", "Name");
-            ViewBag.Authors = new SelectList(bookDropdownsData.Authors, "Id", "FullName");
-
-            return View(response);
+            var authorDetails = await _brandService.GetBrandByIdAsync(id);
+            if (authorDetails == null) return View("NotFound");
+            return View(authorDetails);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, NewBookVM book)
+        public async Task<IActionResult> Edit(int id, [Bind("BrandName, BrandDetails, Comment, LogoURL")] BrandDTO brand)
         {
-            if (id != book.Id) return View("NotFound");
+            if (!ModelState.IsValid) return View(brand);
 
-            if (!ModelState.IsValid)
-            {
-                var bookDropdownsData = await _service.GetNewBookDropdownsValues();
-
-                ViewBag.PublishingHouses = new SelectList(bookDropdownsData.PublishingHouses, "Id", "Name");
-                ViewBag.Authors = new SelectList(bookDropdownsData.Authors, "Id", "FullName");
-
-                return View(book);
-            }
-
-            await _service.UpdateBookAsync(book);
+            await _brandService.EditBrandAsync(brand);
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                var brandDetails = await _brandService.GetBrandByIdAsync(id);
+                return View(brandDetails);
+            }
+            catch (Exception _)
+            {
+                return View("NotFound");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteInstrument(int id)
+        {
+            try
+            {
+                await _brandService.RemoveBrandAsync(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception _)
+            {
+                return View("NotFound");
+            }
         }
     }
 }

@@ -7,9 +7,9 @@ namespace InstrumentStore.Providers.Interfaces
     public interface IStorageProvider<T>
     {
         Task<IEnumerable<T>> GetAll();
-        Task<T> GetById(Guid id);
+        Task<T> GetById(int id);
         Task<T> Insert(T model);
         Task Replace(T model);
-        Task Delete(Guid id);
+        Task Delete(int id);
     }
 }

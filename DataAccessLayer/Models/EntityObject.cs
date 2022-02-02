@@ -6,6 +6,6 @@ namespace DataAccessLayer.Models
     public class EntityObject
     {
         [Key]
-        public Guid Id { get; set; }
+        public int Id { get; set; }
     }
 }

@@ -27,7 +27,7 @@ namespace InstrumentStore.Providers
             return _mapper.Map<IEnumerable<InstrumentDTO>>(instruments);
         }
 
-        public async Task<InstrumentDTO> GetById(Guid id)
+        public async Task<InstrumentDTO> GetById(int id)
         {
             var instrument = await _db.Instruments.GetById(id);
             return _mapper.Map<InstrumentDTO>(instrument);
@@ -48,7 +48,7 @@ namespace InstrumentStore.Providers
             await _db.Save();
         }
 
-        public async Task Delete(Guid id)
+        public async Task Delete(int id)
         {
             var instrument = await _db.Instruments.GetById(id);
             _db.Instruments.Remove(instrument);

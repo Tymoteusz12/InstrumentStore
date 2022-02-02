@@ -28,7 +28,7 @@ namespace InstrumentStore.Services.Providers
             return _mapper.Map<IEnumerable<OrderDTO>>(orders);
         }
 
-        public async Task<OrderDTO> GetById(Guid id)
+        public async Task<OrderDTO> GetById(int id)
         {
             var order = await _db.Orders.GetById(id);
             return _mapper.Map<OrderDTO>(order);
@@ -55,7 +55,7 @@ namespace InstrumentStore.Services.Providers
             await _db.Save();
         }
 
-        public async Task Delete(Guid id)
+        public async Task Delete(int id)
         {
             var order = await _db.Orders.GetById(id);
             _db.Orders.Remove(order);
