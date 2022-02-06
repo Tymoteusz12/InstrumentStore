@@ -2,6 +2,7 @@
 using InstrumentStore.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,10 +12,11 @@ namespace InstrumentsStore.Controllers
     public class InstrumentController : Controller
     {
         private readonly IInstrumentsService _instrumentService;
-
-        public InstrumentController(IInstrumentsService instrumentService)
+        private readonly IBrandsService _brandsService;
+        public InstrumentController(IInstrumentsService instrumentService, IBrandsService brandsService)
         {
             _instrumentService = instrumentService ?? throw new ArgumentNullException(nameof(instrumentService));
+            _brandsService = brandsService ?? throw new ArgumentNullException(nameof(brandsService));
         }
 
         [AllowAnonymous]
@@ -49,16 +51,23 @@ namespace InstrumentsStore.Controllers
             return View("Index", allInstruments);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var brands = await _brandsService.GetAllBrandsAsync();
+            ViewBag.Brands = new SelectList(brands, "Id", "BrandName");
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([Bind("Name, Price, ImageURL, Description, InstrumentTypeValue, BrandId")] InstrumentDTO instrument)
         {
-            if (!ModelState.IsValid) return View(instrument);
-
+            if (!ModelState.IsValid)
+            {
+                var brands = await _brandsService.GetAllBrandsAsync();
+                ViewBag.Brands = new SelectList(brands, "Id", "BrandName");
+                return View(instrument);
+            }
+            
             await _instrumentService.InsertInstrumentAsync(instrument);
             return RedirectToAction(nameof(Index));
         }
@@ -71,11 +80,11 @@ namespace InstrumentsStore.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, [Bind("Name, Price, ImageURL, Description, InstrumentTypeValue, BrandId")] InstrumentDTO instrument)
+        public IActionResult Edit(int id, [Bind("Name, Price, ImageURL, Description, InstrumentTypeValue, BrandId")] InstrumentDTO instrument)
         {
             if (!ModelState.IsValid) return View(instrument);
 
-            await _instrumentService.EditInstrumentAsync(instrument);
+            _instrumentService.EditInstrument(instrument);
             return RedirectToAction(nameof(Index));
         }
 

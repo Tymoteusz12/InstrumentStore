@@ -1,14 +1,12 @@
-﻿using Bookstore.Data;
-using Bookstore.Data.Services;
-using Bookstore.Data.Static;
-using Bookstore.Models;
+﻿using DataAccessLayer.Models;
+using InstrumentStore.Extensions;
+using InstrumentStore.Models.DTO;
+using InstrumentStore.Models.Static;
+using InstrumentStore.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Bookstore.Controllers
@@ -16,115 +14,44 @@ namespace Bookstore.Controllers
     [Authorize(Roles = UserRoles.Admin)]
     public class StoreController : Controller
     {
-        private readonly IBooksService _service;
+        private readonly IStoreService _storeService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public BrandsController(IBooksService service)
+        public StoreController(IStoreService service, UserManager<ApplicationUser> userManager)
         {
-            _service = service;
+            _storeService = service ?? throw new ArgumentNullException(nameof(service));
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
 
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            var allBooks = await _service.GetAllAsync(n => n.PublishingHouse);
-            return View(allBooks);
-        }
-
-        [AllowAnonymous]
-        public async Task<IActionResult> Filter(string searchString)
-        {
-            var allBooks = await _service.GetAllAsync(n => n.PublishingHouse);
-
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                var filteredResultNew = allBooks.Where(n => string.Equals(n.Name, searchString, StringComparison.CurrentCultureIgnoreCase) || string.Equals(n.Description, searchString, StringComparison.CurrentCultureIgnoreCase)).ToList();
-
-                return View("Index", filteredResultNew);
-            }
-
-            return View("Index", allBooks);
-        }
-
-        //GET: Books/Details/1
-        [AllowAnonymous]
-        public async Task<IActionResult> Details(int id)
-        {
-            var bookDetail = await _service.GetBookByIdAsync(id);
-            return View(bookDetail);
-        }
-
-        //GET: Books/Create
-        public async Task<IActionResult> Create()
-        {
-            var bookDropdownsData = await _service.GetNewBookDropdownsValues();
-
-            ViewBag.PublishingHouses = new SelectList(bookDropdownsData.PublishingHouses, "Id", "Name");
-            ViewBag.Authors = new SelectList(bookDropdownsData.Authors, "Id", "FullName");
-
-            return View();
+            var userId = await _userManager.GetUserIdByNameAsync(User.Identity.Name);
+            var userStoreItems = _storeService.GetUserStoreAsync(userId);
+            return View(userStoreItems);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(NewBookVM book)
+        public async Task<IActionResult> InsertItemToStore(InstrumentDTO instrument)
         {
-            if (!ModelState.IsValid)
-            {
-                var bookDropdownsData = await _service.GetNewBookDropdownsValues();
-
-                ViewBag.PublishingHouses = new SelectList(bookDropdownsData.PublishingHouses, "Id", "Name");
-                ViewBag.Authors = new SelectList(bookDropdownsData.Authors, "Id", "FullName");
-
-                return View(book);
-            }
-
-            await _service.AddNewBookAsync(book);
-            return RedirectToAction(nameof(Index));
-        }
-
-
-        //GET: Books/Edit/1
-        public async Task<IActionResult> Edit(int id)
-        {
-            var bookDetails = await _service.GetBookByIdAsync(id);
-            if (bookDetails == null) return View("NotFound");
-
-            var response = new NewBookVM()
-            {
-                Id = bookDetails.Id,
-                Name = bookDetails.Name,
-                Description = bookDetails.Description,
-                Price = bookDetails.Price,
-                ReleaseDate = bookDetails.ReleaseDate,
-                ImageURL = bookDetails.ImageURL,
-                BookCategory = bookDetails.BookCategory,
-                PublishingHouseId = bookDetails.PublishingHouseId,
-                AuthorId = bookDetails.AuthorId,
-            };
-
-            var bookDropdownsData = await _service.GetNewBookDropdownsValues();
-            ViewBag.PublishingHouses = new SelectList(bookDropdownsData.PublishingHouses, "Id", "Name");
-            ViewBag.Authors = new SelectList(bookDropdownsData.Authors, "Id", "FullName");
-
-            return View(response);
+            var userId = await _userManager.GetUserIdByNameAsync(User.Identity.Name);
+            await _storeService.InsertInstrumentAsync(userId, instrument);
+            return RedirectToAction("Index", "Instruments");
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, NewBookVM book)
+        public async Task<IActionResult> DeleteItemFromStore(int instrumentId)
         {
-            if (id != book.Id) return View("NotFound");
-
-            if (!ModelState.IsValid)
+            var userId = await _userManager.GetUserIdByNameAsync(User.Identity.Name);
+            try
             {
-                var bookDropdownsData = await _service.GetNewBookDropdownsValues();
-
-                ViewBag.PublishingHouses = new SelectList(bookDropdownsData.PublishingHouses, "Id", "Name");
-                ViewBag.Authors = new SelectList(bookDropdownsData.Authors, "Id", "FullName");
-
-                return View(book);
+                await _storeService.RemoveInstrumentFromStoreAsync(userId, instrumentId);
+                return RedirectToAction("Index");
             }
-
-            await _service.UpdateBookAsync(book);
-            return RedirectToAction(nameof(Index));
+            catch(Exception _)
+            {
+                return RedirectToAction("Index");
+            }
         }
     }
 }

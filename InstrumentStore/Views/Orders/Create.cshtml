@@ -1,5 +1,99 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model OrderDTO
 @{
+    ViewData["Title"] = "Insert a new instrument to store";
+}
+
+<div class="row">
+    <div class="col-md-8 offset-2">
+        <p>
+            <h4>Create a new order</h4>
+        </p>
+
+        <div class="row">
+            <div class="col-md-8 offset-2">
+                <p>
+                    <h5>This is your order summary</h5>
+                </p>
+                <div class="card" style="width: 18rem;">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Price: @Model.Price $</li>
+                        <li class="list-group-item">Ordered items count: @Model.OrderedItems.Count</li>
+                        <li class="list-group-item">Order date: @Model.OrderDate</li>
+                    </ul>
+                </div>
+                <p>
+                    <h4>You are ordering items below</h4>
+                </p>
+                @foreach (var instrument in Model.OrderedItems)
+                {
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">@instrument.Name</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Price: @instrument.Price</h6>
+                            <a class="btn btn-outline-secondary" asp-action="Details" asp-controller="Instrument" asp-route-id="@instrument.Id">Instrument details</a>
+                        </div>
+                    </div>
+                }
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Street" class="control-label"></label>
+                                <input asp-for="Street" type="text" class="form-control" />
+                                <span asp-validation-for="Street" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="ApartamentNumber" class="control-label"></label>
+                                <input asp-for="ApartamentNumber" type="number" class="form-control" />
+                                <span asp-validation-for="ApartamentNumber" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="BuildingNumber" class="control-label"></label>
+                                <input asp-for="BuildingNumber" type="number" class="form-control" />
+                                <span asp-validation-for="BuildingNumber" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="PostalCode" class="control-label"></label>
+                                <input asp-for="PostalCode" type="text" class="form-control" />
+                                <span asp-validation-for="PostalCode" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="PhoneNumber" class="control-label"></label>
+                                <input asp-for="PhoneNumber" type="tel" class="form-control" />
+                                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Comment" class="control-label"></label>
+                                <input asp-for="Comment" type="text" class="form-control" />
+                                <span asp-validation-for="Comment" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 offset-4 text-center">
+                        <img width="100%" id="ImagePreview" />
+                    </div>
+
+                    <div class="form-group">
+                        <a class="btn btn-outline-secondary" asp-action="Index">Return to home</a>
+                        <input type="submit" value="Create" class="btn btn-outline-success float-right" />
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $("#ImageURL").on("change", function () {
+            var output = document.getElementById("ImageUrlPreview");
+            output.src = $(this).val();
+        })
+    </script>
 }

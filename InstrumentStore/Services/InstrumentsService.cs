@@ -10,7 +10,10 @@ namespace InstrumentStore.Services
     public class InstrumentsService : IInstrumentsService
     {
         private readonly IInstrumentsStorageProvider _instrumentsProvider;
-
+        public InstrumentsService(IInstrumentsStorageProvider instrumentsProvider)
+        {
+            _instrumentsProvider = instrumentsProvider ?? throw new ArgumentNullException(nameof(instrumentsProvider));
+        }
         public async Task<IEnumerable<InstrumentDTO>> GetAllInstrumentsAsync()
         {
             return await _instrumentsProvider.GetAll();
@@ -31,9 +34,9 @@ namespace InstrumentStore.Services
             return await _instrumentsProvider.Insert(model);
         }
 
-        public async Task EditInstrumentAsync(InstrumentDTO model)
+        public void EditInstrument(InstrumentDTO model)
         {
-            await _instrumentsProvider.Replace(model);
+            _instrumentsProvider.Replace(model);
         }
 
         public async Task RemoveInstrumentAsync(int id)

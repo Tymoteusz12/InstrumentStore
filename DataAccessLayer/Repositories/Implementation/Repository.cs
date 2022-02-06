@@ -35,16 +35,19 @@ namespace DataAccessLayer.Repositories.Implementation
         public virtual async Task Add(TEntity entity)
         {
             await Context.Set<TEntity>().AddAsync(entity);
+            Context.SaveChanges();
         }
 
         public virtual void Remove(TEntity entity)
         {
             Context.Set<TEntity>().Remove(entity);
+            Context.SaveChanges();
         }
 
         public void Edit(TEntity entity)
         {
             Context.Set<TEntity>().Update(entity);
+            Context.SaveChanges();
         }
     }
 }

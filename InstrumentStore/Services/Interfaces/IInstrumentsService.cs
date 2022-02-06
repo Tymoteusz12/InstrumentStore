@@ -13,7 +13,7 @@ namespace InstrumentStore.Services.Interfaces
         Task<InstrumentDTO> GetByIdAsync(int id);
         Task<InstrumentDTO> InsertInstrumentAsync(InstrumentDTO model);
 
-        Task EditInstrumentAsync(InstrumentDTO model);
+        void EditInstrument(InstrumentDTO model);
 
         Task RemoveInstrumentAsync(int id);
     }

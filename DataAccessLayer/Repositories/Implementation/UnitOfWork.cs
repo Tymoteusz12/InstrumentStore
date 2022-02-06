@@ -15,6 +15,7 @@ namespace DataAccessLayer.Repositories.Implementation
             Brands = new BrandRepository(_context);
             Instruments = new InstrumentsRepository(_context);
             Orders = new OrderRepository(_context);
+            Store = new StoreRepository(_context);
         }
 
         private readonly ApplicationDbContext _context;
@@ -24,10 +25,7 @@ namespace DataAccessLayer.Repositories.Implementation
 
         public IOrderRepository Orders { get; private set; }
 
-        public async Task Save()
-        {
-            await _context.SaveChangesAsync();
-        }
+        public IStoreRepository Store { get; private set; }
 
         public IEnumerable<ApplicationUser> GetAllUsers() => _context.Users;
     }

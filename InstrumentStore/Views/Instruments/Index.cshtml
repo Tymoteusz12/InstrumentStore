@@ -38,9 +38,9 @@
                             <p class="card-text">
                                 @if (User.Identity.IsAuthenticated && User.IsInRole("User"))
                                 {
-                                    <form asp-action="AddItem" asp-controller="Order">
+                                    <form asp-action="InsertItemToStore" asp-controller="Store" >
                                         <input type="hidden" asp-for="@instrument.Id" />
-                                        <input type="submit" value="Add to chart" class="btn btn-success float-right" />
+                                        <input type="submit" href="@Url.Action("InsertItemToStore", "Store",new { instrument = instrument })" value="Add to chart" class="btn btn-success float-right" />
                                     </form>
                                 }
                                 <a class="btn btn-outline-primary float-right" asp-action="Details" asp-route-id="@instrument.Id">

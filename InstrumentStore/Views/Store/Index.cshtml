@@ -1,5 +1,50 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model StoreDTO
 @{
+    ViewData["Title"] = "Insert a new instrument to store";
 }
+
+<div class="row">
+    <div class="col-md-8 offset-2">
+        <p>
+            <h4>This is your store</h4>
+        </p>
+
+        <div class="row">
+            <div class="col-md-8 offset-2">
+                <p>
+                    <h5>Store summary</h5>
+                </p>
+                <div class="card" style="width: 18rem;">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Price: @Model.FinalPrice $</li>
+                        <li class="list-group-item">Items in store count: @Model.StoreItems.Count</li>
+                    </ul>
+                </div>
+                <p>
+                    <h4>Instruments in your store</h4>
+                </p>
+                @foreach (var instrument in Model.StoreItems)
+                {
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">@instrument.Name</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Price: @instrument.Price</h6>
+                            <a class="btn btn-outline-secondary" asp-action="Details" asp-controller="Instrument" asp-route-id="@instrument.Id">Instrument details</a>
+                            <a class="btn btn-outline-secondary" asp-action="DeleteItemFromStore" asp-route-id="@instrument.Id">Delete item from store</a>
+                        </div>
+                    </div>
+                }
+                <div class="col-md-12">
+                    <div class="card-footer">
+                        <a href="@Url.Action("Create", "Order", new { store = Model })" class="btn btn-success float-right" >
+                            Create order
+                        </a>
+                        <a class="btn btn-outline-primary float-right" asp-action="Index">
+                            Back to store
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

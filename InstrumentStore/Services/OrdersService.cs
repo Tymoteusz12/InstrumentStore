@@ -3,6 +3,7 @@ using InstrumentStore.Providers.Interfaces;
 using InstrumentStore.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace InstrumentStore.Services
@@ -21,7 +22,14 @@ namespace InstrumentStore.Services
 
         public IEnumerable<OrderDTO> GetUserOrders(string userId)
         {
-            return _ordersProvider.GetUserOrders(userId);
+            var user = _ordersProvider.GetUserAsync(userId);
+            
+            if(user == null)
+            {
+                throw new ArgumentNullException("Invalid user id.");
+            }
+
+            return user.Orders;
         }
 
         public async Task<OrderDTO> MakeOrderAsync(OrderDTO model)

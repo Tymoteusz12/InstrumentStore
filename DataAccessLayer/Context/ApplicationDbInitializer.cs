@@ -22,7 +22,7 @@ namespace DataAccessLayer.Context
                 {
                     new Brand
                     {
-                        Id = new Guid(),
+                        Id = 1,
                         BrandName = "Yamaha",
                         BrandDetails = "Yamaha Corporation is a Japanese multinational corporation and conglomerate with a very wide range of products and services",
                         LogoURL = "https://miro.medium.com/max/2400/0*ivJrUEfyy2-WWk6e.jpg",
@@ -30,7 +30,7 @@ namespace DataAccessLayer.Context
                     },
                     new Brand
                     {
-                        Id = new Guid(),
+                        Id = 2,
                         BrandName = "Gibson",
                         BrandDetails = "Gibson Brands, is an American manufacturer of guitars, other musical instruments, and consumer and professional electronics.",
                         LogoURL = "https://miro.medium.com/max/2400/0*T1iZ_ttKcLud12A0.png",
@@ -38,7 +38,7 @@ namespace DataAccessLayer.Context
                     },
                     new Brand
                     {
-                        Id = new Guid(),
+                        Id = 3,
                         BrandName = "Roland",
                         BrandDetails = "Roland Corporation is a Japanese manufacturer of electronic musical instruments, electronic equipment and software.",
                         LogoURL = "https://miro.medium.com/max/2400/0*_Afhq1ZT8ZhhCp4F.png",

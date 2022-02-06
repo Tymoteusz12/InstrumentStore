@@ -9,7 +9,7 @@ namespace InstrumentStore.Providers.Interfaces
         Task<IEnumerable<T>> GetAll();
         Task<T> GetById(int id);
         Task<T> Insert(T model);
-        Task Replace(T model);
+        void Replace(T model);
         Task Delete(int id);
     }
 }

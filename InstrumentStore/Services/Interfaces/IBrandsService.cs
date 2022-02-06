@@ -12,7 +12,7 @@ namespace InstrumentStore.Services.Interfaces
         Task<BrandDTO> GetBrandByIdAsync(int id);
         Task<BrandDTO> InsertBrandAsync(BrandDTO model);
 
-        Task EditBrandAsync(BrandDTO model);
+        void EditBrand(BrandDTO model);
 
         Task RemoveBrandAsync(int id);
     }

@@ -38,22 +38,19 @@ namespace InstrumentsStore.Providers
         {
             var brand = _mapper.Map<Brand>(model);
             await _db.Brands.Add(brand);
-            await _db.Save();
             return _mapper.Map<BrandDTO>(brand);
         }
 
-        public async Task Replace(BrandDTO model)
+        public void Replace(BrandDTO model)
         {
             var brand = _mapper.Map<Brand>(model);
             _db.Brands.Edit(brand);
-            await _db.Save();
         }
 
         public async Task Delete(int id)
         {
             var brand = await _db.Brands.GetById(id);
             _db.Brands.Remove(brand);
-            await _db.Save();
         }
     }
 }

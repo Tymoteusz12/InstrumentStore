@@ -37,22 +37,19 @@ namespace InstrumentStore.Providers
         {
             var instrument = _mapper.Map<Instrument>(model);
             await _db.Instruments.Add(instrument);
-            await _db.Save();
             return _mapper.Map<InstrumentDTO>(instrument);
         }
 
-        public async Task Replace(InstrumentDTO model)
+        public void Replace(InstrumentDTO model)
         {
             var instrument = _mapper.Map<Instrument>(model);
             _db.Instruments.Edit(instrument);
-            await _db.Save();
         }
 
         public async Task Delete(int id)
         {
             var instrument = await _db.Instruments.GetById(id);
             _db.Instruments.Remove(instrument);
-            await _db.Save();
         }
     }
 }

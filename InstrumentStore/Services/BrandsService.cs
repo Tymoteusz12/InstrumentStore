@@ -12,11 +12,11 @@ namespace InstrumentStore.Services
         private readonly IBrandsStorageProvider _brandsProvider;
         public BrandsService(IBrandsStorageProvider brandsProvider)
         {
-            _brandsProvider = _brandsProvider ?? throw new ArgumentNullException(nameof(brandsProvider);
+            _brandsProvider = _brandsProvider ?? throw new ArgumentNullException(nameof(brandsProvider));
         }
-        public async Task EditBrandAsync(BrandDTO model)
+        public void EditBrand(BrandDTO model)
         {
-            await _brandsProvider.Replace(model);
+            _brandsProvider.Replace(model);
         }
 
         public async Task<IEnumerable<BrandDTO>> GetAllBrandsAsync()
@@ -43,7 +43,7 @@ namespace InstrumentStore.Services
 
         public async Task RemoveBrandAsync(int id)
         {
-            await GetBrandById(id);
+            await GetBrandByIdAsync(id);
             await _brandsProvider.Delete(id);
         }
     }

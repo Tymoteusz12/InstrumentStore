@@ -53,11 +53,11 @@ namespace InstrumentsStore.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, [Bind("BrandName, BrandDetails, Comment, LogoURL")] BrandDTO brand)
+        public IActionResult Edit(int id, [Bind("BrandName, BrandDetails, Comment, LogoURL")] BrandDTO brand)
         {
             if (!ModelState.IsValid) return View(brand);
 
-            await _brandService.EditBrandAsync(brand);
+            _brandService.EditBrand(brand);
             return RedirectToAction(nameof(Index));
         }
 

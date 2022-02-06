@@ -9,8 +9,7 @@ namespace DataAccessLayer.Repositories.Interfaces
         IBrandRepository Brands { get; }
         IInstrumentsRepository Instruments { get; }
         IOrderRepository Orders { get; }
-
-        Task Save();
+        IStoreRepository Store { get; }
         IEnumerable<ApplicationUser> GetAllUsers();
     }
 }

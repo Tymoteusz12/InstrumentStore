@@ -11,7 +11,7 @@ namespace Bookstore.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<DataAccessLayer.Models.ApplicationUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IUnitOfWork _context;
 
