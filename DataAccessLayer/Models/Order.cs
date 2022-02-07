@@ -15,9 +15,9 @@ namespace DataAccessLayer.Models
         public string PhoneNumber { get; set; }
         public string PostalCode { get; set; }
         public string Comment { get; set; }
-        public int ApplicationUserId { get; set; }
-        [ForeignKey("ApplicationUserId")]
+        [ForeignKey("ApplicationUser")]
+        public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
-        public List<Instrument> OrderedItems { get; set; }
+        public List<OrderItem> OrderedItems { get; set; }
     }
 }

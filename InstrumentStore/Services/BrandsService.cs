@@ -12,7 +12,7 @@ namespace InstrumentStore.Services
         private readonly IBrandsStorageProvider _brandsProvider;
         public BrandsService(IBrandsStorageProvider brandsProvider)
         {
-            _brandsProvider = _brandsProvider ?? throw new ArgumentNullException(nameof(brandsProvider));
+            _brandsProvider = brandsProvider ?? throw new ArgumentNullException(nameof(brandsProvider));
         }
         public void EditBrand(BrandDTO model)
         {

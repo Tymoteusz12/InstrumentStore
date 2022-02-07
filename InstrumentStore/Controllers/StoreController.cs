@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Bookstore.Controllers
 {
-    [Authorize(Roles = UserRoles.Admin)]
+    [Authorize(Roles = UserRoles.User)]
     public class StoreController : Controller
     {
         private readonly IStoreService _storeService;
@@ -26,26 +26,26 @@ namespace Bookstore.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            var userId = await _userManager.GetUserIdByNameAsync(User.Identity.Name);
-            var userStoreItems = _storeService.GetUserStoreAsync(userId);
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var userStoreItems = await _storeService.GetStoreAsync(user.StoreId);
             return View(userStoreItems);
         }
 
         [HttpPost]
         public async Task<IActionResult> InsertItemToStore(InstrumentDTO instrument)
         {
-            var userId = await _userManager.GetUserIdByNameAsync(User.Identity.Name);
-            await _storeService.InsertInstrumentAsync(userId, instrument);
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            await _storeService.InsertInstrumentAsync(user.StoreId, instrument);
             return RedirectToAction("Index", "Instruments");
         }
 
         [HttpPost]
         public async Task<IActionResult> DeleteItemFromStore(int instrumentId)
         {
-            var userId = await _userManager.GetUserIdByNameAsync(User.Identity.Name);
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
             try
             {
-                await _storeService.RemoveInstrumentFromStoreAsync(userId, instrumentId);
+                await _storeService.RemoveInstrumentFromStoreAsync(user.Store.Id, instrumentId);
                 return RedirectToAction("Index");
             }
             catch(Exception _)

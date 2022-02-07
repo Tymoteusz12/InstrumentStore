@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace DataAccessLayer.Models
 {
     public class Store : EntityObject
     {
-        public int UserId { get; set; }
-        public ApplicationUser User {get;set;}
+        public virtual ApplicationUser User { get; set; }
         public float FinalPrice { get; set; }
-        public List<Instrument> StoreItems { get; set; }
+        public List<OrderItem> StoreItems { get; set; }
 
     }
 }

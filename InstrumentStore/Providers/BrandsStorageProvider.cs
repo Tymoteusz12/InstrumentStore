@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using InstrumentStore.Models.DTO;
 
-namespace InstrumentsStore.Providers
+namespace InstrumentStore.Providers
 {
     public class BrandsStorageProvider : IBrandsStorageProvider
     {
@@ -24,13 +24,13 @@ namespace InstrumentsStore.Providers
 
         public async Task<IEnumerable<BrandDTO>> GetAll()
         {
-            var brands = await _db.Brands.GetAll();
+            var brands = await _db.Brands.GetAllAsync(x => x.Instruments);
             return _mapper.Map<IEnumerable<BrandDTO>>(brands);
         }
 
         public async Task<BrandDTO> GetById(int id)
         {
-            var brand = await _db.Brands.GetById(id);
+            var brand = await _db.Brands.GetByIdAsync(id, x => x.Instruments);
             return _mapper.Map<BrandDTO>(brand);
         }
 
@@ -49,7 +49,7 @@ namespace InstrumentsStore.Providers
 
         public async Task Delete(int id)
         {
-            var brand = await _db.Brands.GetById(id);
+            var brand = await _db.Brands.GetByIdAsync(id);
             _db.Brands.Remove(brand);
         }
     }

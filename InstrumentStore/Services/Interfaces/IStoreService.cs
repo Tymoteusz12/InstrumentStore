@@ -5,8 +5,8 @@ namespace InstrumentStore.Services.Interfaces
 {
     public interface IStoreService
     {
-        Task InsertInstrumentAsync(string userId, InstrumentDTO instrument);
-        Task RemoveInstrumentFromStoreAsync(string userId, int instrumentId);
-        Task<StoreDTO> GetUserStoreAsync(string userId);
+        Task InsertInstrumentAsync(int storeId, InstrumentDTO instrument);
+        Task RemoveInstrumentFromStoreAsync(int storeId, int instrumentId);
+        Task<StoreDTO> GetStoreAsync(int storeId);
     }
 }

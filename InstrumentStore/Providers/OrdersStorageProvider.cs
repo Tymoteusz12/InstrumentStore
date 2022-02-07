@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace InstrumentStore.Services.Providers
+namespace InstrumentStore.Providers
 {
     public class OrdersStorageProvider : IOrdersStorageProvider
     {
@@ -24,13 +24,13 @@ namespace InstrumentStore.Services.Providers
        
         public async Task<IEnumerable<OrderDTO>> GetAll()
         {
-            var orders = await _db.Orders.GetAll();
+            var orders = await _db.Orders.GetAllAsync(x => x.ApplicationUser);
             return _mapper.Map<IEnumerable<OrderDTO>>(orders);
         }
 
         public async Task<OrderDTO> GetById(int id)
         {
-            var order = await _db.Orders.GetById(id);
+            var order = await _db.Orders.GetByIdAsync(id, x => x.ApplicationUser);
             return _mapper.Map<OrderDTO>(order);
         }
 
@@ -49,7 +49,7 @@ namespace InstrumentStore.Services.Providers
 
         public async Task Delete(int id)
         {
-            var order = await _db.Orders.GetById(id);
+            var order = await _db.Orders.GetByIdAsync(id);
             _db.Orders.Remove(order);
         }
 

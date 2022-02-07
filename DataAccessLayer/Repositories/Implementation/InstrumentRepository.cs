@@ -6,10 +6,11 @@ using System.Linq;
 
 namespace DataAccessLayer.Repositories.Implementation
 {
-    public class BrandRepository : Repository<Brand>, IBrandRepository
+    public class InstrumentRepository : Repository<Instrument>, IInstrumentsRepository
     {
-        public BrandRepository(ApplicationDbContext context) : base(context) 
+        public InstrumentRepository(ApplicationDbContext context) : base(context) 
         {
         }
+
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace InstrumentStore.Models.DTO
+﻿using System.Collections.Generic;
+
+namespace InstrumentStore.Models.DTO
 {
     public class BrandDTO
     {
@@ -7,5 +9,7 @@
         public string BrandDetails { get; set; }
         public string Comment { get; set; }
         public string LogoURL { get; set; }
+
+        public List<InstrumentDTO> Instruments { get; set; }
     }
 }

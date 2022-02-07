@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace InstrumentsStore.Controllers
 {
-    public class InstrumentController : Controller
+    public class InstrumentsController : Controller
     {
         private readonly IInstrumentsService _instrumentService;
         private readonly IBrandsService _brandsService;
-        public InstrumentController(IInstrumentsService instrumentService, IBrandsService brandsService)
+        public InstrumentsController(IInstrumentsService instrumentService, IBrandsService brandsService)
         {
             _instrumentService = instrumentService ?? throw new ArgumentNullException(nameof(instrumentService));
             _brandsService = brandsService ?? throw new ArgumentNullException(nameof(brandsService));

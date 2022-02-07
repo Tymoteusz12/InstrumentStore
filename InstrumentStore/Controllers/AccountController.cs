@@ -45,7 +45,7 @@ namespace Bookstore.Controllers
                     var result = await _signInManager.PasswordSignInAsync(user, credentials.Password, false, false);
                     if (result.Succeeded)
                     {
-                        return RedirectToAction("Index", "Books");
+                        return RedirectToAction("Index", "Instruments");
                     }
                 }
                 TempData["Error"] = "Wrong credentials. Please, try again!";
@@ -89,7 +89,7 @@ namespace Bookstore.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Books");
+            return RedirectToAction("Index", "Instruments");
         }
 
         public IActionResult AccessDenied(string ReturnUrl)

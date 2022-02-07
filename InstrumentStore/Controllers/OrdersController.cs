@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Bookstore.Controllers
 {
-    [Authorize(Roles = UserRoles.Admin)]
+    [Authorize(Roles = UserRoles.User)]
     public class OrdersController : Controller
     {
         private readonly IOrdersService _ordersService;
@@ -36,8 +36,9 @@ namespace Bookstore.Controllers
                 }
                 else if (User.IsInRole(UserRoles.User))
                 {
-                    var user = await _userManager.FindByEmailAsync(User.Identity.Name);
-                    return View(user.Orders);
+                    var userId = await _userManager.GetUserIdByNameAsync(User.Identity.Name);
+                    var orders = _ordersService.GetUserOrders(userId);
+                    return View(orders);
                 }
             }
             catch (Exception e)

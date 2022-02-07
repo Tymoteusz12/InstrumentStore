@@ -1,6 +1,7 @@
 ﻿using DataAccessLayer.Context;
 using DataAccessLayer.Models;
 using DataAccessLayer.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,17 +12,20 @@ namespace DataAccessLayer.Repositories.Implementation
     {
         public StoreRepository(ApplicationDbContext context) : base(context) { }
 
-        public async Task<Store> GetUserStoreAsync(int userId)
+        public override void Edit(Store store)
         {
-            var stores = await GetAll();
-            return stores.Where(store => store.UserId == userId).FirstOrDefault();
-        }
-
-        public async Task InsertItemToUserStoreAsync(int userId, Instrument item)
-        {
-            var store = await GetUserStoreAsync(userId);
-            store.StoreItems.Add(item);
-            Edit(store);
+            var local = Context.Set<ApplicationUser>()
+                .Local
+                .FirstOrDefault(entry => entry.Id.Equals(store.User.Id));
+            // check if local is not null 
+            if (local != null)
+            {
+                // detach
+                Context.Entry(local).State = EntityState.Detached;
+            }
+            Context.Set<Store>().Update(store);
+            Context.Entry(store).State = EntityState.Modified;
+            Context.SaveChanges();
         }
     }
 }

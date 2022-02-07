@@ -5,29 +5,34 @@
 }
 
 <div class="row">
-    <div class="col-md-8 offset-md-2 text-center">
+    <div class="col-md-9 offset-md-2 text-center">
         @foreach (var brand in Model)
         {
-            <div>
-                <img class="rounded-circle" src="@brand.LogoURL" alt="@brand.BrandName" style="max-width: 150px" />
+            <div class="m-4 card">
+                <div>
+                    <img class="rounded" src="@brand.LogoURL" alt="@brand.BrandName" style="max-width: 250px" />
+                </div>
+                <div class="card-header">
+                    @Html.DisplayFor(modelItem => brand.BrandName)
+                </div>
+                <div class="card-title">
+                    @Html.DisplayFor(modelItem => brand.BrandDetails)
+                </div>
+                <div class="card-text">
+                    @Html.DisplayFor(modelItem => brand.Comment)
+                </div>
+                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                <div>
+                    <a class="btn btn-outline-info" asp-action="Details" asp-route-id="@brand.Id"><i class="bi bi-eye"></i>Details</a>     
+                    <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@brand.Id"><i class="bi bi-pencil-square"></i>Edit</a>   
+                    <a class="btn btn-danger text-white" asp-action="Delete" asp-route-id="@brand.Id"><i class="bi bi-trash"></i>Delete</a>
+                </div>
+                }
             </div>
-            <div>
-                @Html.DisplayFor(modelItem => brand.BrandName)
-            </div>
-            <div>
-                @Html.DisplayFor(modelItem => brand.BrandDetails)
-            </div>
-            <div>
-                @Html.DisplayFor(modelItem => brand.Comment)
-            </div>
-            @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-            {
-            <div>
-                <a class="btn btn-outline-info" asp-action="Details" asp-route-id="@brand.Id"><i class="bi bi-eye"></i>Details</a>     
-                <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@brand.Id"><i class="bi bi-pencil-square"></i>Edit</a>   
-                <a class="btn btn-danger text-white" asp-action="Delete" asp-route-id="@brand.Id"><i class="bi bi-trash"></i>Delete</a>
-            </div>
-            }
         }
+    <a class="btn btn-outline-primary float-right" asp-controller="Instruments" asp-action="Index">
+        Back to store
+    </a>
     </div>
 </div>

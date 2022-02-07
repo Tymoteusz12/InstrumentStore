@@ -2,8 +2,10 @@
 using DataAccessLayer.Models;
 using DataAccessLayer.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace DataAccessLayer.Repositories.Implementation
@@ -18,18 +20,23 @@ namespace DataAccessLayer.Repositories.Implementation
             Context = context;
         }
 
-        public virtual async Task<IEnumerable<TEntity>> GetAll()
+        public async Task<IEnumerable<TEntity>> GetAllAsync() => await Context.Set<TEntity>().AsNoTracking().ToListAsync();
+
+        public async Task<IEnumerable<TEntity>> GetAllAsync(params Expression<Func<TEntity, object>>[] includeProperties)
         {
-            return await Context.Set<TEntity>()
-                .AsNoTracking()
-                .ToListAsync();
+            IQueryable<TEntity> query = Context.Set<TEntity>().AsNoTracking();
+            query = includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty).AsNoTracking());
+            return await query.ToListAsync();
+
         }
 
-        public virtual async Task<TEntity> GetById(int id)
+        public async Task<TEntity> GetByIdAsync(int id) => await Context.Set<TEntity>().AsNoTracking().FirstOrDefaultAsync(n => n.Id == id);
+
+        public async Task<TEntity> GetByIdAsync(int id, params Expression<Func<TEntity, object>>[] includeProperties)
         {
-            return await Context.Set<TEntity>().
-                Where(x => x.Id == id)
-                .FirstOrDefaultAsync();
+            IQueryable<TEntity> query = Context.Set<TEntity>().AsNoTracking();
+            query = includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty).AsNoTracking());
+            return await query.FirstOrDefaultAsync(n => n.Id == id);
         }
 
         public virtual async Task Add(TEntity entity)
@@ -44,7 +51,7 @@ namespace DataAccessLayer.Repositories.Implementation
             Context.SaveChanges();
         }
 
-        public void Edit(TEntity entity)
+        public virtual void Edit(TEntity entity)
         {
             Context.Set<TEntity>().Update(entity);
             Context.SaveChanges();

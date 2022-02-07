@@ -13,12 +13,5 @@ namespace DataAccessLayer.Context
         public DbSet<Brand> Brands { get; set; }
         public DbSet<Instrument> Instruments { get; set; }
         public DbSet<Order> Orders { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Brand>().ToTable("Brand");
-            modelBuilder.Entity<Instrument>().ToTable("Instruments");
-            modelBuilder.Entity<Order>().ToTable("Orders");
-        }
     }
 }

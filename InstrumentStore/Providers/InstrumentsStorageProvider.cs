@@ -23,13 +23,13 @@ namespace InstrumentStore.Providers
 
         public async Task<IEnumerable<InstrumentDTO>> GetAll()
         {
-            var instruments = await _db.Instruments.GetAll();
+            var instruments = await _db.Instruments.GetAllAsync(x => x.Brand);
             return _mapper.Map<IEnumerable<InstrumentDTO>>(instruments);
         }
 
         public async Task<InstrumentDTO> GetById(int id)
         {
-            var instrument = await _db.Instruments.GetById(id);
+            var instrument = await _db.Instruments.GetByIdAsync(id, x => x.Brand);
             return _mapper.Map<InstrumentDTO>(instrument);
         }
 
@@ -48,7 +48,7 @@ namespace InstrumentStore.Providers
 
         public async Task Delete(int id)
         {
-            var instrument = await _db.Instruments.GetById(id);
+            var instrument = await _db.Instruments.GetByIdAsync(id);
             _db.Instruments.Remove(instrument);
         }
     }

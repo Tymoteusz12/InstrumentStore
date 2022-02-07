@@ -5,7 +5,7 @@
 }
 
 <div class="row">
-    <div class="col-md-8 offset-2">
+    <div class="col-md-10 offset-2">
         <div class="card mb-12">
             <div class="row g-0">
                 <div class="col-md-12">
@@ -17,14 +17,14 @@
                         </p>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4 mt-4">
                     <img src="@Model.ImageURL" width="100%" alt="@Model.Name">
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
                         <p class="card-text">
                             <b>Brand: </b>
-                            <a asp-controller="Brand" asp-action="Details" asp-route-id="@Model.BrandId">
+                            <a asp-controller="Brands" asp-action="Details" asp-route-id="@Model.BrandId">
                                 @Model.Brand.BrandName
                             </a>
                         </p>
@@ -47,7 +47,7 @@
                             }
                             @if (User.Identity.IsAuthenticated && User.IsInRole("User"))
                             {
-                                <form asp-action="AddItem" asp-controller="Order">
+                                <form asp-action="AddItem" asp-controller="Orders">
                                     <input type="hidden" asp-for="Id" />
                                     <input type="submit" value="Add to chart" class="btn btn-success float-right" />
                                 </form>

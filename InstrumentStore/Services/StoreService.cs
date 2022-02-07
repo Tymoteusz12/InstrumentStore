@@ -14,9 +14,9 @@ namespace InstrumentStore.Services
         {
             _storeProvider = storeProvider ?? throw new ArgumentNullException(nameof(storeProvider));
         }
-        public async Task<StoreDTO> GetUserStoreAsync(string userId)
+        public async Task<StoreDTO> GetStoreAsync(int storeId)
         {
-            var userStore = await _storeProvider.GetUserStoreAsync(userId);
+            var userStore = await _storeProvider.GetById(storeId);
 
             if (userStore == null)
             {
@@ -26,16 +26,16 @@ namespace InstrumentStore.Services
             return userStore;
         }
 
-        public async Task InsertInstrumentAsync(string userId, InstrumentDTO instrument)
+        public async Task InsertInstrumentAsync(int storeId, InstrumentDTO instrument)
         {
-            var userStore = await GetUserStoreAsync(userId);
+            var userStore = await GetStoreAsync(storeId);
             userStore.StoreItems.Add(instrument);
             _storeProvider.Replace(userStore);
         }
 
-        public async Task RemoveInstrumentFromStoreAsync(string userId, int instrumentId)
+        public async Task RemoveInstrumentFromStoreAsync(int storeId, int instrumentId)
         {
-            var userStore = await GetUserStoreAsync(userId);
+            var userStore = await GetStoreAsync(storeId);
             var deletedItem = userStore.StoreItems.Where(item => item.Id == instrumentId).FirstOrDefault();
 
             if(deletedItem == null)
@@ -43,7 +43,7 @@ namespace InstrumentStore.Services
                 throw new ArgumentNullException("Invalid item id.");
             }
 
-            userStore.StoreItems = userStore.StoreItems.Where(item => item.Id != instrumentId).ToList();
+            userStore.StoreItems = userStore.StoreItems.Where(item => item.Id == instrumentId).ToList();
             _storeProvider.Replace(userStore);
         }
     }
