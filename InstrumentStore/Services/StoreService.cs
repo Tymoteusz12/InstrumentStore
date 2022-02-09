@@ -1,4 +1,5 @@
-﻿using InstrumentStore.Models.DTO;
+﻿using InstrumentsShop.Models.DTO;
+using InstrumentStore.Models.DTO;
 using InstrumentStore.Providers.Interfaces;
 using InstrumentStore.Services.Interfaces;
 using System;
@@ -26,24 +27,25 @@ namespace InstrumentStore.Services
             return userStore;
         }
 
-        public async Task InsertInstrumentAsync(int storeId, InstrumentDTO instrument)
+        public async Task InsertInstrumentAsync(int storeId, StoreItemDTO storeItem)
         {
             var userStore = await GetStoreAsync(storeId);
-            userStore.StoreItems.Add(instrument);
-            _storeProvider.Replace(userStore);
+
+            await _storeProvider.AddItemToStoreAsync(storeId, storeItem);
         }
 
         public async Task RemoveInstrumentFromStoreAsync(int storeId, int instrumentId)
         {
             var userStore = await GetStoreAsync(storeId);
-            var deletedItem = userStore.StoreItems.Where(item => item.Id == instrumentId).FirstOrDefault();
+            var deletedItem = userStore.StoreItems.Where(item => item.InstrumentId == instrumentId).FirstOrDefault();
 
             if(deletedItem == null)
             {
                 throw new ArgumentNullException("Invalid item id.");
             }
-
-            userStore.StoreItems = userStore.StoreItems.Where(item => item.Id == instrumentId).ToList();
+            userStore.FinalPrice -= deletedItem.Price;
+            userStore.StoreItems = userStore.StoreItems.Where(item => item.InstrumentId != instrumentId).ToList();
+            await _storeProvider.DeleteStoreItem(deletedItem.StoreItemId);
             _storeProvider.Replace(userStore);
         }
     }

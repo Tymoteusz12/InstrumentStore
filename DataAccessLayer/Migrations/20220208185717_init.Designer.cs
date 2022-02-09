@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220207232922_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20220208185717_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -141,22 +141,12 @@ namespace DataAccessLayer.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("OrderId")
-                        .HasColumnType("int");
-
                     b.Property<float>("Price")
                         .HasColumnType("real");
-
-                    b.Property<int?>("StoreId")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BrandId");
-
-                    b.HasIndex("OrderId");
-
-                    b.HasIndex("StoreId");
 
                     b.ToTable("Instruments");
                 });
@@ -205,6 +195,32 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("Orders");
                 });
 
+            modelBuilder.Entity("DataAccessLayer.Models.OrderItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("InstrumentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<float>("Price")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderItems");
+                });
+
             modelBuilder.Entity("DataAccessLayer.Models.Store", b =>
                 {
                     b.Property<int>("Id")
@@ -218,6 +234,32 @@ namespace DataAccessLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Store");
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Models.StoreItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("InstrumentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<float>("Price")
+                        .HasColumnType("real");
+
+                    b.Property<int?>("StoreId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StoreId");
+
+                    b.ToTable("StoreItems");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -370,14 +412,6 @@ namespace DataAccessLayer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DataAccessLayer.Models.Order", null)
-                        .WithMany("OrderedItems")
-                        .HasForeignKey("OrderId");
-
-                    b.HasOne("DataAccessLayer.Models.Store", null)
-                        .WithMany("StoreItems")
-                        .HasForeignKey("StoreId");
-
                     b.Navigation("Brand");
                 });
 
@@ -388,6 +422,24 @@ namespace DataAccessLayer.Migrations
                         .HasForeignKey("ApplicationUserId");
 
                     b.Navigation("ApplicationUser");
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Models.OrderItem", b =>
+                {
+                    b.HasOne("DataAccessLayer.Models.Order", "Order")
+                        .WithMany("OrderedItems")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Models.StoreItem", b =>
+                {
+                    b.HasOne("DataAccessLayer.Models.Store", null)
+                        .WithMany("StoreItems")
+                        .HasForeignKey("StoreId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

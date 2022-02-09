@@ -1,4 +1,6 @@
-﻿using DataAccessLayer.Models;
+﻿using AutoMapper;
+using DataAccessLayer.Models;
+using InstrumentsShop.Models.DTO;
 using InstrumentStore.Extensions;
 using InstrumentStore.Models.DTO;
 using InstrumentStore.Models.Static;
@@ -6,7 +8,9 @@ using InstrumentStore.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,11 +21,13 @@ namespace Bookstore.Controllers
     {
         private readonly IOrdersService _ordersService;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IMapper _mapper;
 
-        public OrdersController(IOrdersService service, UserManager<ApplicationUser> userManager)
+        public OrdersController(IOrdersService service, UserManager<ApplicationUser> userManager, IMapper mapper)
         {
             _ordersService = service ?? throw new ArgumentNullException(nameof(service));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         [AllowAnonymous]
@@ -37,7 +43,7 @@ namespace Bookstore.Controllers
                 else if (User.IsInRole(UserRoles.User))
                 {
                     var userId = await _userManager.GetUserIdByNameAsync(User.Identity.Name);
-                    var orders = _ordersService.GetUserOrders(userId);
+                    var orders = await _ordersService.GetUserOrders(userId);
                     return View(orders);
                 }
             }
@@ -49,24 +55,29 @@ namespace Bookstore.Controllers
         }
 
 
-        public IActionResult Create(StoreDTO store)
+        public IActionResult CreateOrderView(string store)
         {
+            var storeDto = JsonConvert.DeserializeObject<StoreDTO>(store);
             var orderModel = new OrderDTO()
             {
-                Price = store.FinalPrice,
+                UserId = storeDto.UserId,
+                Price = storeDto.FinalPrice,
                 OrderDate = DateTime.Now,
-                OrderedItems = store.StoreItems
+                OrderedItems = _mapper.Map<IEnumerable<OrderItemDTO>>(storeDto.StoreItems).ToList()
             };
-            if (!store.StoreItems.Any())
+            if (!storeDto.StoreItems.Any())
             {
                 return RedirectToAction("Index", "Store");
             }
             return View(orderModel);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create([Bind("OrderDate, OrderDetails, Price, Street, ApartamentNumber, BuildingNumber, PostalCode, PhoneNumber, Comment, OrderedItems")] OrderDTO order)
+        public async Task<IActionResult> Create(string orderString)
         {
+            var order = JsonConvert.DeserializeObject<OrderDTO>(orderString, new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore
+            });
             if (!ModelState.IsValid) return View(order);
 
             order.UserId = await _userManager.GetUserIdByNameAsync(User.Identity.Name);

@@ -89,6 +89,8 @@ namespace InstrumentStore
             services.AddScoped<IInstrumentsRepository, InstrumentRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IStoreRepository, StoreRepository>();
+            services.AddScoped<IStoreItemRepository, StoreItemRepository>();
+            services.AddScoped<IOrderItemRepository, OrderItemRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

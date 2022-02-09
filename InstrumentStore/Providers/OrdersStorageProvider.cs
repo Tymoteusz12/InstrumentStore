@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DataAccessLayer.Models;
 using DataAccessLayer.Repositories.Interfaces;
+using InstrumentsShop.Models.DTO;
 using InstrumentStore.Models.DTO;
 using InstrumentStore.Providers.Interfaces;
 using System;
@@ -24,13 +25,13 @@ namespace InstrumentStore.Providers
        
         public async Task<IEnumerable<OrderDTO>> GetAll()
         {
-            var orders = await _db.Orders.GetAllAsync(x => x.ApplicationUser);
+            var orders = await _db.Orders.GetAllAsync(x => x.ApplicationUser, x => x.OrderedItems);
             return _mapper.Map<IEnumerable<OrderDTO>>(orders);
         }
 
         public async Task<OrderDTO> GetById(int id)
         {
-            var order = await _db.Orders.GetByIdAsync(id, x => x.ApplicationUser);
+            var order = await _db.Orders.GetByIdAsync(id, x => x.ApplicationUser, x => x.OrderedItems);
             return _mapper.Map<OrderDTO>(order);
         }
 

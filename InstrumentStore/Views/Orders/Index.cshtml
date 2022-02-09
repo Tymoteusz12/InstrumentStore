@@ -15,7 +15,7 @@
         }
         @foreach (var order in Model)
         {
-            <div class="card" style="width: 18rem;">
+            <div class="card border-info m-4 col-6">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">Order date: @order.OrderDate</li>
                     <li class="list-group-item">Order price: @order.Price</li>
@@ -24,7 +24,9 @@
                     <li class="list-group-item">Ordered items: 
                     @foreach (var instrument in order.OrderedItems) 
                     {
-                        <p> |  @instrument.Name  | </p>
+                        <div class="row border border-dark m-3 p-2">
+                            <a asp-action="Details" asp-controller="Instruments" asp-route-id="@instrument.InstrumentId"> @instrument.Name </a>
+                        </div>
                     }
                     </li>
                 </ul>

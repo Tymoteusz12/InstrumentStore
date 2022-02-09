@@ -10,6 +10,8 @@ namespace DataAccessLayer.Repositories.Interfaces
         IInstrumentsRepository Instruments { get; }
         IOrderRepository Orders { get; }
         IStoreRepository Store { get; }
+        IStoreItemRepository StoreItems { get; }
+        IOrderItemRepository OrderItems { get; }
         IEnumerable<ApplicationUser> GetAllUsers();
     }
 }

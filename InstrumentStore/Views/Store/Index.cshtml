@@ -1,6 +1,6 @@
 ﻿@model StoreDTO
 @{
-    ViewData["Title"] = "Insert a new instrument to store";
+    ViewData["Title"] = "Your store";
 }
 
 <div class="row">
@@ -10,7 +10,7 @@
         </p>
 
         <div class="row">
-            <div class="col-md-8 offset-2">
+            <div class="col-md-12 offset-2">
                 <p>
                     <h5>Store summary</h5>
                 </p>
@@ -25,21 +25,21 @@
                 </p>
                 @foreach (var instrument in Model.StoreItems)
                 {
-                    <div class="card" style="width: 18rem;">
+                    <div class="col-md-10 card">
                         <div class="card-body">
                             <h5 class="card-title">@instrument.Name</h5>
                             <h6 class="card-subtitle mb-2 text-muted">Price: @instrument.Price</h6>
-                            <a class="btn btn-outline-secondary" asp-action="Details" asp-controller="Instrument" asp-route-id="@instrument.Id">Instrument details</a>
-                            <a class="btn btn-outline-secondary" asp-action="DeleteItemFromStore" asp-route-id="@instrument.Id">Delete item from store</a>
+                            <div class=" row col-md-8">
+                                <a class="btn btn-outline-info" asp-action="Details" asp-controller="Instruments" asp-route-id="@instrument.InstrumentId">Instrument details</a>
+                                <a class="btn btn-outline-danger" asp-action="DeleteItemFromStore" asp-route-id="@instrument.InstrumentId">Delete item from store</a>
+                            </div>
                         </div>
                     </div>
                 }
                 <div class="col-md-12">
                     <div class="card-footer">
-                        <a href="@Url.Action("Create", "Order", new { store = Model })" class="btn btn-success float-right" >
-                            Create order
-                        </a>
-                        <a class="btn btn-outline-primary float-right" asp-action="Index">
+                        <a href="@Url.Action("CreateOrderView", "Orders", new { store = @JsonConvert.SerializeObject(Model)})" class="btn btn-success float-right" >Create order</a>
+                        <a class="btn btn-outline-primary float-right" asp-action="Index" asp-controller="Instruments">
                             Back to store
                         </a>
                     </div>

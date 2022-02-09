@@ -1,4 +1,6 @@
-﻿using InstrumentStore.Models.DTO;
+﻿using InstrumentsShop.Models.DTO;
+using InstrumentStore.Models.DTO;
+using System.Threading.Tasks;
 
 namespace InstrumentStore.Providers.Interfaces
 {

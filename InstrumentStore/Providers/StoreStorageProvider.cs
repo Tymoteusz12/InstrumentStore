@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DataAccessLayer.Models;
 using DataAccessLayer.Repositories.Interfaces;
+using InstrumentsShop.Models.DTO;
 using InstrumentStore.Models.DTO;
 using InstrumentStore.Providers.Interfaces;
 using System;
@@ -23,16 +24,27 @@ namespace InstrumentStore.Providers
 
         public async Task<IEnumerable<StoreDTO>> GetAll()
         {
-            var stores = await _db.Store.GetAllAsync(x => x.User);
+            var stores = await _db.Store.GetAllAsync(x => x.StoreItems, x => x.User);
             return _mapper.Map<IEnumerable<StoreDTO>>(stores);
         }
 
         public async Task<StoreDTO> GetById(int id)
         {
-            var store = await _db.Store.GetByIdAsync(id, x => x.User);
+            var store = await _db.Store.GetByIdAsync(id, x => x.StoreItems, x => x.User);
             return _mapper.Map<StoreDTO>(store);
         }
 
+        public async Task<StoreDTO> AddItemToStoreAsync(int storeId, StoreItemDTO storeItemDTO)
+        {
+            var store = await GetById(storeId);
+            if(store.StoreItems.Count < 10)
+            {
+                store.StoreItems.Add(storeItemDTO);
+                store.FinalPrice += storeItemDTO.Price;
+                Replace(store);
+            }
+            return store;
+        }
         public async Task<StoreDTO> Insert(StoreDTO model)
         {
             var store = _mapper.Map<Store>(model);
@@ -46,6 +58,11 @@ namespace InstrumentStore.Providers
             _db.Store.Edit(store);
         }
 
+        public async Task DeleteStoreItem(int storeItemId)
+        {
+            var storeItem = await _db.StoreItems.GetByIdAsync(storeItemId);
+            _db.StoreItems.Remove(storeItem);
+        }
         public async Task Delete(int id)
         {
             var store = await _db.Store.GetByIdAsync(id);

@@ -16,13 +16,18 @@ namespace DataAccessLayer.Repositories.Implementation
             IBrandRepository brandRepository,
             IInstrumentsRepository instrumentsRepository,
             IOrderRepository orderRepository,
-            IStoreRepository storeRepository)
+            IStoreRepository storeRepository,
+            IStoreItemRepository storeItems,
+            IOrderItemRepository orderItems)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             Brands = brandRepository ?? throw new ArgumentNullException(nameof(brandRepository));
             Instruments = instrumentsRepository ?? throw new ArgumentNullException(nameof(instrumentsRepository));
             Orders = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
             Store = storeRepository ?? throw new ArgumentNullException(nameof(storeRepository));
+            StoreItems = storeItems ?? throw new ArgumentNullException(nameof(storeItems));
+
+            OrderItems = orderItems ?? throw new ArgumentNullException(nameof(orderItems));
         }
 
         private readonly ApplicationDbContext _context;
@@ -34,6 +39,9 @@ namespace DataAccessLayer.Repositories.Implementation
 
         public IStoreRepository Store { get; private set; }
 
+        public IStoreItemRepository StoreItems { get; private set; }
+
+        public IOrderItemRepository OrderItems { get; private set; }
         public IEnumerable<ApplicationUser> GetAllUsers() => _context.Users.AsNoTracking().ToList();
     }
 }

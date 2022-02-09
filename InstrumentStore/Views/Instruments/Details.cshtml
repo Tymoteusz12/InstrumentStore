@@ -29,7 +29,7 @@
                             </a>
                         </p>
                         <p class="card-text"><b>Instrument type: </b>@Model.InstrumentTypeValue.ToString()</p>
-                        <p class="card-text"><b>Price: </b>@Model.Price</p>
+                        <p class="card-text"><b>Price: </b>@Model.Price $</p>
                         <p class="card-text">@Model.Description</p>
                     </div>
                 </div>
@@ -40,16 +40,19 @@
                             @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                             {
                                 <a class="btn btn-outline-success float-right" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-                                <form asp-action="DeleteInstrument">
+                                <form asp-action="DeleteItemFromStore" asp-controller="Store">
                                     <input type="hidden" asp-for="Id" />
                                     <input type="submit" value="Delete" class="btn btn-danger float-right" />
                                 </form>
                             }
                             @if (User.Identity.IsAuthenticated && User.IsInRole("User"))
                             {
-                                <form asp-action="AddItem" asp-controller="Orders">
-                                    <input type="hidden" asp-for="Id" />
-                                    <input type="submit" value="Add to chart" class="btn btn-success float-right" />
+                                <form asp-action="InsertItemToStore" asp-controller="Store">
+                                    <input type="hidden" asp-for="@Model.Id" />
+                                    <input type="hidden" asp-for="@Model.BrandId" />
+                                    <input type="hidden" asp-for="@Model.Price" />
+                                    <input type="hidden" asp-for="@Model.Name" />
+                                    <input type="submit" href="@Url.Action("InsertItemToStore", "Store", new { instrument = Model })" value="Add to chart" class="btn btn-success float-right" />
                                 </form>
                             }
                             <a class="btn btn-outline-primary float-right" asp-action="Index">

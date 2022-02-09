@@ -9,7 +9,7 @@ namespace InstrumentStore.Services.Interfaces
     {
         Task<IEnumerable<OrderDTO>> GetAllOrdersAsync();
 
-        IEnumerable<OrderDTO> GetUserOrders(string userId);
+        Task<IEnumerable<OrderDTO>> GetUserOrders(string userId);
         Task<OrderDTO> MakeOrderAsync(OrderDTO model);
     }
 }

@@ -1,16 +1,16 @@
 ﻿@model OrderDTO
 @{
-    ViewData["Title"] = "Insert a new instrument to store";
+    ViewData["Title"] = "Create new order";
 }
 
 <div class="row">
-    <div class="col-md-8 offset-2">
+    <div class="col-md-12 offset-2">
         <p>
             <h4>Create a new order</h4>
         </p>
 
         <div class="row">
-            <div class="col-md-8 offset-2">
+            <div class="ml-0 flex col-10 offset-2">
                 <p>
                     <h5>This is your order summary</h5>
                 </p>
@@ -30,14 +30,14 @@
                         <div class="card-body">
                             <h5 class="card-title">@instrument.Name</h5>
                             <h6 class="card-subtitle mb-2 text-muted">Price: @instrument.Price</h6>
-                            <a class="btn btn-outline-secondary" asp-action="Details" asp-controller="Instrument" asp-route-id="@instrument.Id">Instrument details</a>
+                            <a class="btn btn-outline-secondary" asp-action="Details" asp-controller="Instrument" asp-route-id="@instrument.InstrumentId">Instrument details</a>
                         </div>
                     </div>
                 }
                 <form asp-action="Create">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-10">
                             <div class="form-group">
                                 <label asp-for="Street" class="control-label"></label>
                                 <input asp-for="Street" type="text" class="form-control" />
@@ -76,9 +76,10 @@
                         <img width="100%" id="ImagePreview" />
                     </div>
 
-                    <div class="form-group">
+                    <div class="col-10">
                         <a class="btn btn-outline-secondary" asp-action="Index">Return to home</a>
-                        <input type="submit" value="Create" class="btn btn-outline-success float-right" />
+                        <a href="@Url.Action("Create", "Orders", new { orderString = @JsonConvert.SerializeObject(Model, 
+                            new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore })})" class="btn btn-outline-success float-right">Create</a>
                     </div>
 
                 </form>

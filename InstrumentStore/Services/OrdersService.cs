@@ -11,29 +11,36 @@ namespace InstrumentStore.Services
     public class OrdersService : IOrdersService
     {
         private readonly IOrdersStorageProvider _ordersProvider;
-        public OrdersService(IOrdersStorageProvider ordersProvider)
+        private readonly IStoreStorageProvider _storeProvider;
+        public OrdersService(IOrdersStorageProvider ordersProvider, IStoreStorageProvider storeProvider)
         {
-            _ordersProvider = ordersProvider ?? throw new ArgumentNullException();
+            _ordersProvider = ordersProvider ?? throw new ArgumentNullException(nameof(ordersProvider));
+            _storeProvider = storeProvider ?? throw new ArgumentNullException(nameof(storeProvider));
         }
         public async Task<IEnumerable<OrderDTO>> GetAllOrdersAsync()
         {
             return await _ordersProvider.GetAll();
         }
 
-        public IEnumerable<OrderDTO> GetUserOrders(string userId)
+        public async Task<IEnumerable<OrderDTO>> GetUserOrders(string userId)
         {
-            var user = _ordersProvider.GetUserAsync(userId);
-            
-            if(user == null)
-            {
-                throw new ArgumentNullException("Invalid user id.");
-            }
+            var orders = await GetAllOrdersAsync();
 
-            return user.Orders;
+            return orders.Where(order => order.UserId == userId).ToList();
         }
-
         public async Task<OrderDTO> MakeOrderAsync(OrderDTO model)
         {
+            var store = (await _storeProvider.GetAll()).Where(store => store.UserId == model.UserId).FirstOrDefault();
+            
+            if(store == null)
+            {
+                throw new ArgumentNullException("Invalid store userId.");
+            }
+
+            store.StoreItems.ForEach(item => _storeProvider.DeleteStoreItem(item.StoreItemId).Wait());
+            store.FinalPrice = 0;
+            store.StoreItems.Clear();
+            _storeProvider.Replace(store);
             return await _ordersProvider.Insert(model);
         }
     }

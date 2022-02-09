@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InstrumentsShop.Models.DTO;
+using System;
 using System.Collections.Generic;
 
 namespace InstrumentStore.Models.DTO
@@ -15,6 +16,6 @@ namespace InstrumentStore.Models.DTO
         public string PhoneNumber { get; set; }
         public string PostalCode { get; set; }
         public string Comment { get; set; }
-        public List<InstrumentDTO> OrderedItems { get; set; } = new List<InstrumentDTO>();
+        public List<OrderItemDTO> OrderedItems { get; set; } = new List<OrderItemDTO>();
     }
 }
