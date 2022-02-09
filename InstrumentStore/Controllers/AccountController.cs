@@ -1,9 +1,12 @@
-﻿using DataAccessLayer.Models;
+﻿using AutoMapper;
+using DataAccessLayer.Models;
 using DataAccessLayer.Repositories.Interfaces;
 using InstrumentStore.Models.DTO;
 using InstrumentStore.Models.Static;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,17 +17,21 @@ namespace Bookstore.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IUnitOfWork _context;
+        private readonly IMapper _mapper;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IUnitOfWork context)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, 
+            IUnitOfWork context,
+            IMapper mapper)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _context = context;
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public IActionResult Users()
         {
-            var users = _context.GetAllUsers().ToList();
+            var users = _mapper.Map<IEnumerable<UserDTO>>(_context.GetAllUsers().ToList());
             return View(users);
         }
 
@@ -75,7 +82,9 @@ namespace Bookstore.Controllers
             {
                 FullName = userRegister.FullName,
                 Email = userRegister.EmailAddress,
-                UserName = userRegister.EmailAddress
+                UserName = userRegister.EmailAddress,
+                Orders = new List<Order>(),
+                Store = new Store()
             };
             var newUserResponse = await _userManager.CreateAsync(newUser, userRegister.Password);
 

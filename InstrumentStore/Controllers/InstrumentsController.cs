@@ -74,13 +74,15 @@ namespace InstrumentsStore.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var authorDetails = await _instrumentService.GetByIdAsync(id);
-            if (authorDetails == null) return View("NotFound");
-            return View(authorDetails);
+            var instrumentDetails = await _instrumentService.GetByIdAsync(id);
+            if (instrumentDetails == null) return View("NotFound");
+            var brands = await _brandsService.GetAllBrandsAsync();
+            ViewBag.Brands = new SelectList(brands, "Id", "BrandName");
+            return View(instrumentDetails);
         }
 
         [HttpPost]
-        public IActionResult Edit(int id, [Bind("Name, Price, ImageURL, Description, InstrumentTypeValue, BrandId")] InstrumentDTO instrument)
+        public IActionResult Edit([Bind("Name, Price, ImageURL, Description, InstrumentTypeValue, BrandId, Id")] InstrumentDTO instrument)
         {
             if (!ModelState.IsValid) return View(instrument);
 
@@ -88,14 +90,6 @@ namespace InstrumentsStore.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> Delete(int id)
-        {
-            var authorDetails = await _instrumentService.GetByIdAsync(id);
-            if (authorDetails == null) return View("NotFound");
-            return View(authorDetails);
-        }
-
-        [HttpPost]
         public async Task<IActionResult> DeleteInstrument(int id)
         {
             try

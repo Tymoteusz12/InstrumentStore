@@ -47,13 +47,13 @@ namespace InstrumentsStore.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var authorDetails = await _brandService.GetBrandByIdAsync(id);
-            if (authorDetails == null) return View("NotFound");
-            return View(authorDetails);
+            var brandDetails = await _brandService.GetBrandByIdAsync(id);
+            if (brandDetails == null) return View("NotFound");
+            return View(brandDetails);
         }
 
         [HttpPost]
-        public IActionResult Edit(int id, [Bind("BrandName, BrandDetails, Comment, LogoURL")] BrandDTO brand)
+        public IActionResult Edit([Bind("Id, BrandName, BrandDetails, Comment, LogoURL")] BrandDTO brand)
         {
             if (!ModelState.IsValid) return View(brand);
 
@@ -74,8 +74,7 @@ namespace InstrumentsStore.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> DeleteInstrument(int id)
+        public async Task<IActionResult> DeleteBrand(int id)
         {
             try
             {

@@ -14,6 +14,8 @@ namespace InstrumentStore.Models.DTO
 
         [Required]
         [DataType(DataType.Password)]
+        [StringLength(30, MinimumLength = 4,
+                  ErrorMessage = "Password should be between 4 and 30 characters")]
         public string Password { get; set; }
 
         [Display(Name = "Confirm password")]

@@ -12,65 +12,59 @@
             <h5>Below you can see items you can get here</h5>
         </p>
     </div>
-        @foreach (var instrument in Model)
-        {
-            <div class="col-sm-6 border-primary mb-3">
-                <div class="card mb-6">
-                    <div class="col g-0">
-                        <div class="col-md-12">
-                            <div class="card-header text-white bg-secondary">
-                                <p class="card-text">
-                                    <h5 class="card-title">
-                                        @instrument.Name
-                                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-                                        {
-                                            <a class="text-white float-right" asp-action="Edit" asp-route-id="@instrument.Id"><i class="bi bi-pencil-square"></i>Edit</a>
-                                        }
-                                    </h5>
-                                </p>
-                            </div>
+    @foreach (var instrument in Model)
+    {
+        <div class="col-sm-6 border-primary mb-3">
+            <div class="card mb-6">
+                <div class="col g-0">
+                    <div class="col-md-12">
+                        <div class="card-header text-white bg-secondary">
+                            <p class="card-text">
+                                <h5 class="card-title">
+                                    @instrument.Name
+                                </h5>
+                            </p>
                         </div>
-                        <div class="col-md-12">
-                            <img src="@instrument.ImageURL" width="100%" alt="@instrument.Name">
+                    </div>
+                    <div class="col-md-12">
+                        <img src="@instrument.ImageURL" width="100%" alt="@instrument.Name">
+                    </div>
+                    <div class="col-md-12">
+                        <div class="card-body">
+                            <p class="card-text">@instrument.Description</p>
+                            <p class="card-text"><b>Instrument brand: </b>@instrument.Brand.BrandName</p>
+                            <p class="card-text"><b>Instrument type: </b>@instrument.InstrumentTypeValue.ToString()</p>
+                            <p class="card-text"><b>Price: </b>@instrument.Price.ToString()$</p>
                         </div>
-                        <div class="col-md-12">
-                            <div class="card-body">
-                                <p class="card-text">@instrument.Description</p>
-                                <p class="card-text"><b>Instrument brand: </b>@instrument.Brand.BrandName</p>
-                                <p class="card-text"><b>Instrument type: </b>@instrument.InstrumentTypeValue.ToString()</p>
-                                <p class="card-text"><b>Price: </b>@instrument.Price.ToString()$</p>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="card-footer ">
-                                <p class="card-text">
-                                    @if (User.Identity.IsAuthenticated && User.IsInRole("User"))
-                                    {
-                                        <form asp-action="InsertItemToStore" asp-controller="Store">
-                                            <input type="hidden" asp-for="@instrument.Id" />
-                                            <input type="hidden" asp-for="@instrument.BrandId" />
-                                            <input type="hidden" asp-for="@instrument.Price"/>
-                                            <input type="hidden" asp-for="@instrument.Name" />
-                                            <input type="submit" href="@Url.Action("InsertItemToStore", "Store", new { instrument = instrument })" value="Add to chart" class="btn btn-success float-right" />
-                                        </form>
-                                    }
-                                    <a class="btn btn-outline-primary float-right" asp-action="Details" asp-route-id="@instrument.Id">
-                                        <i class="bi bi-eye-fill"></i> Show Details
-                                    </a>
-                                </p>
-                            </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="card-footer ">
+                            <p class="card-text">
+                                @if (User.Identity.IsAuthenticated && User.IsInRole("User"))
+                                {
+                                    <form asp-action="InsertItemToStore" asp-controller="Store">
+                                        <input type="hidden" asp-for="@instrument.Id" />
+                                        <input type="hidden" asp-for="@instrument.BrandId" />
+                                        <input type="hidden" asp-for="@instrument.Price" />
+                                        <input type="hidden" asp-for="@instrument.Name" />
+                                        <input type="submit" href="@Url.Action("InsertItemToStore", "Store", new { instrument = instrument })" value="Add to chart" class="btn btn-success float-right" />
+                                    </form>
+                                }
+                                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                                {
+                                    <a class="btn btn-outline-info" asp-action="Edit" asp-route-id="@instrument.Id"><i class="bi bi-pencil-square"></i>Edit</a>
+                                    <a class="btn btn-danger" asp-action="DeleteInstrument" asp-route-id="@instrument.Id"> Delete</a>
+                                }
+                                <a class="btn btn-outline-primary float-right" asp-action="Details" asp-route-id="@instrument.Id">
+                                    <i class="bi bi-eye-fill"></i> Show Details
+                                </a>
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
-        }
-    </div>
-
-    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-    {
-        <div style="position: fixed; right: 25px; bottom: 25px;" class="text-white">
-            <a asp-controller="Instruments" asp-action="Create" class="btn btn-success">
-                <i class="bi bi-plus-circle"></i> Add New
-            </a>
         </div>
     }
+</div>
+
+@await Html.PartialAsync("_CreateItem", "Instruments")

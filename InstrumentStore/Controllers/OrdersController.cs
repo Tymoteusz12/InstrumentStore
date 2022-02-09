@@ -49,7 +49,7 @@ namespace Bookstore.Controllers
             }
             catch (Exception e)
             {
-                return View("CustomError", e);
+                return RedirectToAction("CustomError", "Account", e.Message);
             }
             return RedirectToAction("AccessDenied", "Account");
         }

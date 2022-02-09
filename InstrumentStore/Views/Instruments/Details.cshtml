@@ -40,10 +40,7 @@
                             @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                             {
                                 <a class="btn btn-outline-success float-right" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-                                <form asp-action="DeleteItemFromStore" asp-controller="Store">
-                                    <input type="hidden" asp-for="Id" />
-                                    <input type="submit" value="Delete" class="btn btn-danger float-right" />
-                                </form>
+                                <a class="btn btn-danger float-right" asp-action="DeleteInstrument" asp-route-id="@Model.Id"> Delete</a>
                             }
                             @if (User.Identity.IsAuthenticated && User.IsInRole("User"))
                             {
